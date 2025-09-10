@@ -94,7 +94,7 @@ The system builds a custom Docker image (`hax-ai-cyber-lab`) with:
 
 - **Base**: Ubuntu 22.04 LTS
 - **Tools**: nmap, netcat, tcpdump, wireshark, john, hydra, python3
-- **User**: `student` with sudo access (password: `haxwarp123`)
+- **User**: `student` with sudo access (password: set in `.env` file)
 - **SSH**: Enabled for terminal connections
 
 ### Container Lifecycle
@@ -108,7 +108,7 @@ The system builds a custom Docker image (`hax-ai-cyber-lab`) with:
 ### For Students
 1. Enter your student ID and course name
 2. Wait for "Container ready" message
-3. Use password `haxwarp123` when prompted
+3. Use the password from your `.env` file when prompted
 4. Access cybersecurity tools in your isolated environment
 
 ### For Instructors
@@ -142,10 +142,27 @@ python3 -m http.server 8080
 
 ### Environment Variables
 ```bash
+# Server Configuration
 PORT=3000                    # Server port
 DOCKER_MEMORY_LIMIT=512m     # Container memory limit
 DOCKER_CPU_LIMIT=0.5         # Container CPU limit
+
+# Security Configuration
+STUDENT_PASSWORD=your_secure_password_here  # Student container password
+
+# AI Configuration (Optional)
+OPENAI_API_KEY=your_openai_key      # For AI assistance
+ANTHROPIC_API_KEY=your_anthropic_key # Alternative AI provider
 ```
+
+### Security Notes
+
+🔒 **Important**: The `.env` file contains sensitive configuration and should never be committed to version control. 
+
+- **Student Password**: Set `STUDENT_PASSWORD` in your `.env` file instead of using hardcoded passwords
+- **API Keys**: Keep your AI provider API keys secure in the `.env` file
+- **Environment Isolation**: Each student gets an isolated container with the configured password
+- **Default Fallback**: If no password is set, defaults to `defaultpass123`
 
 ### Docker Settings
 - **Memory**: 512MB per container (configurable)

@@ -12,6 +12,7 @@ class HaxAIWarpClient {
   initializeApp() {
     this.setupEventListeners();
     this.updateConnectionStatus('disconnected');
+    this.loadConfiguration();
     
     // Initialize AI provider display
     const aiProvider = document.getElementById('ai-provider');
@@ -25,6 +26,22 @@ class HaxAIWarpClient {
     // Check for instructor mode
     if (window.location.search.includes('instructor=true')) {
       this.showInstructorPanel();
+    }
+  }
+
+  async loadConfiguration() {
+    try {
+      const response = await fetch('/api/config');
+      const config = await response.json();
+      
+      // Update password display in HTML
+      const passwordElements = document.querySelectorAll('.student-password');
+      passwordElements.forEach(el => {
+        el.textContent = config.studentPassword;
+      });
+      
+    } catch (error) {
+      console.error('Failed to load configuration:', error);
     }
   }
 
@@ -307,16 +324,6 @@ class HaxAIWarpClient {
   async askAI() {
     const query = document.getElementById('ai-query').value;
     if (!query) return;
-
-    const suggestionsDiv = document.getElementById('ai-suggestions');
-    
-    // Show that we're processing the question
-    this.displayAISuggestion({
-      type: 'guidance',
-      title: '🤔 Analyzing Your Question',
-      message: `Processing: "${query}"...`,
-      reasoning: 'Let me think about this in the context of your current session.'
-    });
 
     // Send to backend for AI processing
     if (this.socket) {

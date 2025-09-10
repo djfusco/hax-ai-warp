@@ -26,8 +26,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create student user with sudo privileges
+ARG STUDENT_PASSWORD=defaultpass123
 RUN useradd -m -s /bin/bash student && \
-    echo 'student:haxwarp123' | chpasswd && \
+    echo "student:${STUDENT_PASSWORD}" | chpasswd && \
     usermod -aG sudo student
 
 # Set up SSH
@@ -39,7 +40,7 @@ RUN mkdir /var/run/sshd && \
 # Create welcome files for students
 RUN echo "Welcome to HAX AI Cybersecurity Lab!" > /home/student/README.txt && \
     echo "Available tools: nmap, netcat, tcpdump, wireshark, john, hydra" >> /home/student/README.txt && \
-    echo "Default password: haxwarp123" >> /home/student/README.txt && \
+    echo "Default password: \${STUDENT_PASSWORD}" >> /home/student/README.txt && \
     chown student:student /home/student/README.txt
 
 EXPOSE 22

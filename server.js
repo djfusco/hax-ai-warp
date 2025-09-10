@@ -115,6 +115,13 @@ class HaxAIWarpServer {
         res.status(500).json({ success: false, error: error.message });
       }
     });
+
+    // Get configuration for frontend
+    this.app.get('/api/config', (req, res) => {
+      res.json({ 
+        studentPassword: process.env.STUDENT_PASSWORD || 'defaultpass123'
+      });
+    });
   }
 
   setupSocketHandlers() {
