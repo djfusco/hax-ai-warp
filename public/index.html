@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAX AI Warp - Linux Sandbox Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://unpkg.com/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://unpkg.com/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/xterm@5.3.0/css/xterm.css" />
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 HAX AI Warp</h1>
+            <p>Linux Sandbox Terminal for Educational Use</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Student Login Section -->
+            <div id="login-section" class="section">
+                <h2>Student Access</h2>
+                <form id="student-form">
+                    <div class="form-group">
+                        <label for="student-id">Student ID:</label>
+                        <input type="text" id="student-id" required placeholder="Enter your student ID">
+                    </div>
+                    <div class="form-group">
+                        <label for="course-name">Course:</label>
+                        <input type="text" id="course-name" required placeholder="e.g., CS101, WebDev, Linux">
+                    </div>
+                    
+                    <!-- AI Configuration -->
+                    <div class="ai-config-section">
+                        <h3>🤖 AI Assistant Configuration</h3>
+                        <div class="form-group">
+                            <label for="ai-provider">AI Provider:</label>
+                            <select id="ai-provider">
+                                <option value="pattern-matching">Pattern Matching (Free - No API Key)</option>
+                                <option value="openai">OpenAI GPT (Requires API Key)</option>
+                                <option value="anthropic">Anthropic Claude (Requires API Key)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="api-key-group" style="display: none;">
+                            <label for="api-key">API Key:</label>
+                            <input type="password" id="api-key" placeholder="Enter your API key">
+                            <small class="api-help">
+                                <span id="api-help-text">Get your API key from the provider's website</span>
+                                <a href="#" id="api-help-link" target="_blank">Get API Key</a>
+                            </small>
+                        </div>
+                        <div class="ai-mode-info">
+                            <small id="ai-mode-description">
+                                Pattern matching mode provides built-in cybersecurity guidance without requiring an API key.
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <button type="submit">Create Sandbox Session</button>
+                </form>
+            </div>
+
+            <!-- Terminal Section -->
+            <div id="terminal-section" class="section hidden">
+                <div class="password-hint">
+                    🔑 <strong>Container Password:</strong> <code>haxwarp123</code>
+                    <small>(Use this when prompted for student@localhost's password)</small>
+                </div>
+                <div class="terminal-header">
+                    <span id="session-info"></span>
+                    <div class="terminal-controls">
+                        <button id="clear-terminal">Clear</button>
+                        <button id="reset-vm">Reset VM</button>
+                        <button id="disconnect">Disconnect</button>
+                    </div>
+                </div>
+                <div id="terminal-container"></div>
+                
+                <!-- AI Tutor Panel -->
+                <div id="ai-panel" class="ai-panel">
+                    <h3>🤖 AI Cybersecurity Tutor</h3>
+                    <div class="ai-description">
+                        <small>Your AI assistant watches your terminal activity and provides helpful hints, error explanations, and learning guidance.</small>
+                    </div>
+                    <div id="ai-suggestions"></div>
+                    <div class="ai-input">
+                        <input type="text" id="ai-query" placeholder="Ask about commands, errors, or cybersecurity concepts...">
+                        <button id="ask-ai">Ask AI</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Section -->
+            <div id="status-section" class="section">
+                <h3>System Status</h3>
+                <div id="status-info">
+                    <div class="status-item">
+                        <span class="status-label">Connection:</span>
+                        <span id="connection-status" class="status-value">Disconnected</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">VM Status:</span>
+                        <span id="vm-status" class="status-value">Not assigned</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">Session Time:</span>
+                        <span id="session-time" class="status-value">00:00:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructor Panel -->
+        <div id="instructor-panel" class="instructor-panel hidden">
+            <h3>👨‍🏫 Instructor Controls</h3>
+            <div class="instructor-controls">
+                <button id="show-all-sessions">View All Sessions</button>
+                <button id="create-demo-vm">Create Demo VM</button>
+                <button id="cleanup-vms">Cleanup VMs</button>
+            </div>
+            <div id="sessions-list"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

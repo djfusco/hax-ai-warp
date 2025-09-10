@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Config Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        select, input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; }
+        #api-key-group { background: #f0f0f0; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 AI Configuration Test</h1>
+    
+    <div class="form-group">
+        <label for="ai-provider">AI Provider:</label>
+        <select id="ai-provider">
+            <option value="pattern-matching">Pattern Matching (Free - No API Key)</option>
+            <option value="openai">OpenAI GPT (Requires API Key)</option>
+            <option value="anthropic">Anthropic Claude (Requires API Key)</option>
+        </select>
+    </div>
+    
+    <div class="form-group" id="api-key-group" style="display: none;">
+        <label for="api-key">API Key:</label>
+        <input type="password" id="api-key" placeholder="Enter your API key">
+        <small class="api-help">
+            <span id="api-help-text">Get your API key from the provider's website</span>
+            <a href="#" id="api-help-link" target="_blank">Get API Key</a>
+        </small>
+    </div>
+    
+    <div class="ai-mode-info">
+        <small id="ai-mode-description">
+            Pattern matching mode provides built-in cybersecurity guidance without requiring an API key.
+        </small>
+    </div>
+
+    <script>
+        function handleAIProviderChange(provider) {
+            console.log('🔧 AI Provider changed to:', provider);
+            
+            const apiKeyGroup = document.getElementById('api-key-group');
+            const apiHelpText = document.getElementById('api-help-text');
+            const apiHelpLink = document.getElementById('api-help-link');
+            const modeDescription = document.getElementById('ai-mode-description');
+
+            if (provider === 'pattern-matching') {
+                apiKeyGroup.style.display = 'none';
+                modeDescription.textContent = 'Pattern matching mode provides built-in cybersecurity guidance without requiring an API key.';
+            } else if (provider === 'openai') {
+                apiKeyGroup.style.display = 'block';
+                apiHelpText.textContent = 'Get your OpenAI API key from platform.openai.com';
+                apiHelpLink.href = 'https://platform.openai.com/api-keys';
+                apiHelpLink.textContent = 'Get OpenAI API Key';
+                modeDescription.textContent = 'OpenAI mode provides advanced AI-powered assistance with context-aware responses and personalized learning guidance.';
+            } else if (provider === 'anthropic') {
+                apiKeyGroup.style.display = 'block';
+                apiHelpText.textContent = 'Get your Anthropic API key from console.anthropic.com';
+                apiHelpLink.href = 'https://console.anthropic.com/';
+                apiHelpLink.textContent = 'Get Anthropic API Key';
+                modeDescription.textContent = 'Anthropic Claude mode provides intelligent AI assistance with detailed explanations and educational focus.';
+            }
+        }
+
+        // Set up event listener
+        document.addEventListener('DOMContentLoaded', () => {
+            const aiProvider = document.getElementById('ai-provider');
+            aiProvider.addEventListener('change', (e) => {
+                handleAIProviderChange(e.target.value);
+            });
+            
+            // Initialize
+            handleAIProviderChange(aiProvider.value);
+        });
+    </script>
+</body>
+</html>
