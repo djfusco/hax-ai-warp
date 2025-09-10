@@ -1,6 +1,6 @@
-# HAX AI Warp - Installation with Published Docker Image
+# HAX AI Warp - Installation Guide
 
-This version of HAX AI Warp uses a published Docker image from Docker Hub, so no local Docker build is required.
+HAX AI Warp automatically builds its Docker environment on first run - no manual setup required!
 
 ## Prerequisites
 
@@ -32,9 +32,9 @@ npm start
 
 1. **Start Docker Desktop** and ensure it's running
 2. **Run the application** - it will automatically:
-   - Download the Docker image `dfusco/hax-ai-cyber-lab:latest` from Docker Hub (~1.4GB)
+   - Build the Docker image `hax-ai-cyber-lab:latest` from Ubuntu 22.04 (~5-10 minutes)
    - Create the `.env` configuration file
-   - Set up the development environment
+   - Set up the cybersecurity lab environment
 
 3. **Add your API key** to the `.env` file:
    ```bash
@@ -46,35 +46,42 @@ npm start
 
 4. **Access the interface** at `http://localhost:3000`
 
-## What's Different
+## What Happens Automatically
 
-- ✅ **No Docker build required** - Uses pre-built image from Docker Hub
-- ✅ **Faster startup** - No need to compile the cybersecurity lab environment
-- ✅ **Consistent environment** - Same image across all installations
-- ✅ **Automatic updates** - Pull latest image version when available
+- ✅ **Docker image built locally** - Creates cybersecurity lab environment
+- ✅ **No external dependencies** - Everything builds from Ubuntu base image
+- ✅ **Consistent environment** - Same setup across all installations
+- ✅ **One-time build** - Image reused for all subsequent runs
 
 ## Troubleshooting
 
-### "Docker image not found"
-This error should no longer occur with the published image. If you see it:
-1. Ensure Docker Desktop is running
-2. Check internet connection (needed to pull from Docker Hub)
-3. Try manually pulling: `docker pull dfusco/hax-ai-cyber-lab:latest`
+### First Time Build
+The initial Docker image build takes 5-10 minutes and downloads ~500MB. This is normal and only happens once.
 
-### Docker Hub Image Info
-- **Image**: `dfusco/hax-ai-cyber-lab:latest`
-- **Size**: ~1.4GB
-- **Base**: Ubuntu 22.04
-- **Includes**: SSH server, cybersecurity tools, development environment
+### "Docker image not found"
+If you see build errors:
+1. Ensure Docker Desktop is running
+2. Check internet connection (needed for Ubuntu base image)
+3. Ensure you have ~2GB free disk space
+4. Try: `docker system prune` to clean up space
+
+### Build Progress
+You'll see messages like:
+```
+🔨 Docker image hax-ai-cyber-lab:latest not found, building...
+Building cybersecurity lab Docker image...
+```
+
+This is normal - the system is creating your lab environment.
 
 ## Support
 
 If you encounter issues:
-1. Check [troubleshooting guide](./TROUBLESHOOTING.md)
-2. Verify Docker Desktop is running
-3. Ensure you have internet access for initial image download
-4. Check the logs in the terminal for specific error messages
+1. Check Docker Desktop is running
+2. Ensure sufficient disk space (~2GB)
+3. Check the terminal for build progress
+4. Wait for the initial build to complete
 
 ---
 
-**Note**: The Docker image will be downloaded automatically on first run. This is a one-time download of approximately 1.4GB.
+**Note**: The Docker image build happens automatically on first run. This is a one-time process that takes 5-10 minutes.
