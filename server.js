@@ -122,6 +122,54 @@ class HaxAIWarpServer {
         studentPassword: process.env.STUDENT_PASSWORD || 'defaultpass123'
       });
     });
+
+    // Get AI status for frontend
+    // Test AI endpoint
+    this.app.get('/api/test-ai', (req, res) => {
+      const testSuggestion = {
+        type: 'guidance',
+        title: '🤖 AI Assistant',
+        message: 'This is a test AI suggestion to verify frontend display.',
+        suggestion: 'Try running: ls -la',
+        reasoning: 'Testing AI suggestion delivery and display'
+      };
+      
+      // Broadcast to all connected clients for testing
+      this.io.emit('ai-suggestion', testSuggestion);
+      
+      res.json({ message: 'Test AI suggestion sent', suggestion: testSuggestion });
+    });
+
+    this.app.get('/api/ai-status', (req, res) => {
+      const aiTutor = this.terminalManager?.aiTutor;
+      if (!aiTutor) {
+        return res.json({ 
+          provider: 'pattern-matching',
+          connected: false,
+          message: 'Pattern-matching mode active'
+        });
+      }
+
+      if (aiTutor.openaiEnabled) {
+        res.json({
+          provider: 'openai',
+          connected: true,
+          message: 'OpenAI integration active'
+        });
+      } else if (aiTutor.anthropicEnabled) {
+        res.json({
+          provider: 'anthropic', 
+          connected: true,
+          message: 'Anthropic Claude integration active'
+        });
+      } else {
+        res.json({
+          provider: 'pattern-matching',
+          connected: false, 
+          message: 'Pattern-matching mode active'
+        });
+      }
+    });
   }
 
   setupSocketHandlers() {
@@ -266,6 +314,20 @@ class HaxAIWarpServer {
       
       await fs.writeFile(envPath, envContent);
       console.log(`💾 Saved ${provider} API key to .env file`);
+      
+      // Update current process environment
+      if (provider === 'openai') {
+        process.env.OPENAI_API_KEY = apiKey;
+        delete process.env.ANTHROPIC_API_KEY;
+      } else if (provider === 'anthropic') {
+        process.env.ANTHROPIC_API_KEY = apiKey;
+        delete process.env.OPENAI_API_KEY;
+      }
+      
+      // Reinitialize AI tutor with new API key
+      const AITutor = require('./lib/ai-tutor');
+      this.terminalManager.aiTutor = new AITutor();
+      console.log(`🔄 AI Tutor reinitialized with ${provider} configuration`);
       
     } catch (error) {
       console.error('Error saving API key to .env:', error);

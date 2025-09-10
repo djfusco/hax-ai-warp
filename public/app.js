@@ -40,8 +40,35 @@ class HaxAIWarpClient {
         el.textContent = config.studentPassword;
       });
       
+      // Check AI status
+      await this.updateAIStatus();
+      
     } catch (error) {
       console.error('Failed to load configuration:', error);
+    }
+  }
+
+  async updateAIStatus() {
+    try {
+      const response = await fetch('/api/ai-status');
+      const status = await response.json();
+      
+      // Update AI status in the system status area
+      const aiStatusElement = document.getElementById('ai-status');
+      if (aiStatusElement) {
+        if (status.connected) {
+          aiStatusElement.style.color = '#27ae60';
+          aiStatusElement.innerHTML = `${status.provider.toUpperCase()} ✅`;
+          aiStatusElement.title = status.message;
+        } else {
+          aiStatusElement.style.color = '#f39c12';
+          aiStatusElement.innerHTML = 'Pattern Mode';
+          aiStatusElement.title = status.message;
+        }
+      }
+      
+    } catch (error) {
+      console.error('Failed to check AI status:', error);
     }
   }
 
@@ -298,13 +325,18 @@ class HaxAIWarpClient {
     
     const icon = typeIcons[suggestion.type] || '💭';
     
+    // Combine message and suggestion into a single response
+    let content = suggestion.message;
+    if (suggestion.suggestion && suggestion.suggestion !== suggestion.message) {
+      content += ` Try: ${suggestion.suggestion}`;
+    }
+    
     const suggestionHTML = `
       <div class="ai-suggestion ${suggestion.type}" style="margin-bottom: 15px; padding: 12px; border-left: 4px solid #3498db; background: #f8f9fa; border-radius: 4px;">
         <div style="font-weight: bold; color: #2c3e50; margin-bottom: 5px;">
           ${icon} ${suggestion.title} <span style="font-size: 0.8em; color: #7f8c8d; float: right;">${timestamp}</span>
         </div>
-        <div style="color: #34495e; margin-bottom: 8px;">${suggestion.message}</div>
-        ${suggestion.suggestion ? `<div style="background: #2c3e50; color: #f39c12; padding: 8px; border-radius: 3px; font-family: monospace; font-size: 0.9em; margin-bottom: 5px;">${suggestion.suggestion}</div>` : ''}
+        <div style="color: #34495e; margin-bottom: 8px;">${content}</div>
         <div style="font-size: 0.85em; color: #7f8c8d; font-style: italic;">${suggestion.reasoning}</div>
       </div>
     `;
@@ -495,6 +527,11 @@ class HaxAIWarpClient {
       if (result.success) {
         console.log(`✅ ${provider} API key saved successfully`);
         this.showNotification(`${provider.toUpperCase()} API key saved for future sessions`, 'success');
+        
+        // Update AI status indicator
+        setTimeout(() => {
+          this.updateAIStatus();
+        }, 1000);
       } else {
         console.error('Failed to save API key:', result.error);
       }
