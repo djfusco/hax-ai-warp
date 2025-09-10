@@ -157,6 +157,8 @@ function startServer(port = 3000) {
       console.log('');
       console.log('💡 If you encountered issues:');
       console.log('• Make sure Docker is running');
+      console.log('• Ensure you have run: docker login');
+      console.log('• Ensure you have run: docker pull dfusco/hax-ai-cyber-lab:latest');
       console.log('• Check that your AI API key is configured in .env');
       console.log('• Ensure port', port, 'is not already in use');
     }

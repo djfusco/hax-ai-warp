@@ -345,7 +345,7 @@ For advanced AI features, set up an API key:
 ## Container Architecture
 
 ### Cybersecurity Lab Image
-The system builds a custom Docker image (`hax-ai-cyber-lab`) with:
+The system uses a pre-built Docker image (`dfusco/hax-ai-cyber-lab`) with:
 
 - **Base**: Ubuntu 22.04 LTS
 - **Tools**: nmap, netcat, tcpdump, wireshark, john, hydra, python3

@@ -1,39 +1,105 @@
-# Quick Start Guide
+# 🚀 HAX AI Warp - Quick Start Guide
 
-## For End Users
+**Follow these exact steps to install and run HAX AI Warp:**
 
-### 🚀 Instant Start (Recommended)
+## Before You Start
+
+Make sure you have:
+- ✅ **Docker Desktop** installed and running
+- ✅ **Node.js 18+** installed
+- ✅ **Docker Hub account** (free at [hub.docker.com](https://hub.docker.com))
+
+## Step 1: Docker Setup (Required!)
+
+**Login to Docker Hub:**
+```bash
+docker login
+```
+Enter your Docker Hub username and password.
+
+**Pull the HAX AI Warp image:**
+```bash
+docker pull dfusco/hax-ai-cyber-lab:latest
+```
+⏳ This downloads ~1.4GB - wait for it to complete!
+
+**Verify the image:**
+```bash
+docker images | grep dfusco/hax-ai-cyber-lab
+```
+You should see: `dfusco/hax-ai-cyber-lab   latest   ...`
+
+## Step 2: Install and Run
+
+**Option A - NPX (easiest):**
 ```bash
 npx hax-ai-warp
 ```
 
-That's it! This command will:
-1. ✅ Check if you have Node.js and Docker
-2. ✅ Download and set up the application
-3. ✅ Create configuration files
-4. ✅ Start the server on http://localhost:3000
-
-### ⚙️ Custom Setup
+**Option B - Manual install:**
 ```bash
-# Run setup first
-npx hax-ai-warp --setup
-
-# Edit configuration
-nano .env
-
-# Start with custom port
-npx hax-ai-warp --port 8080
+git clone https://github.com/djfusco/hax-ai-warp.git
+cd hax-ai-warp
+npm install
+npm start
 ```
 
-### 🔑 Add AI Features
-1. Get API key from [OpenAI](https://platform.openai.com/api-keys) or [Anthropic](https://console.anthropic.com/account/keys)
-2. Edit `.env` file:
-   ```bash
-   ANTHROPIC_API_KEY=your-key-here
-   ```
-3. Restart: `npx hax-ai-warp`
+## Step 3: Add API Key
+
+When the server starts, edit the `.env` file that gets created:
+
+```bash
+# Add ONE of these:
+OPENAI_API_KEY=your_openai_key_here
+# OR
+ANTHROPIC_API_KEY=your_anthropic_key_here
+```
+
+Get your API key:
+- **OpenAI**: https://platform.openai.com/api-keys
+- **Anthropic**: https://console.anthropic.com/account/keys
+
+## Step 4: Access the Interface
+
+Open: **http://localhost:3000**
+
+## Expected Output
+
+When everything works, you'll see:
+```
+✅ Docker image dfusco/hax-ai-cyber-lab:latest already exists
+🤖 AI Tutor: [Provider] integration enabled
+🚀 HAX AI Warp Server running on port 3000
+📱 Interface: http://localhost:3000
+```
+
+## Troubleshooting
+
+### ❌ "Docker image not found"
+**Problem**: You skipped Step 1
+**Solution**: Run the docker commands above
+
+### ❌ "unauthorized: incorrect username or password"
+**Problem**: Docker login failed
+**Solution**: 
+1. Run `docker login` again
+2. Check your Docker Hub credentials
+3. Try: `docker logout` then `docker login`
+
+### ❌ "Address already in use"
+**Problem**: Port 3000 is busy
+**Solution**: `npx hax-ai-warp --port 3001`
+
+## What Next?
+
+1. 🎯 Create a terminal session
+2. 🐧 Practice Linux commands
+3. 🤖 Get AI assistance as you learn
+4. 🔒 Explore cybersecurity tools
 
 ---
+
+**🎉 You're ready to use HAX AI Warp for cybersecurity education!**
 
 ## For Instructors
 
