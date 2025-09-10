@@ -1,6 +1,6 @@
 {
   "name": "hax-ai-warp",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "AI-powered cybersecurity education platform with Docker-based Linux terminals and intelligent tutoring",
   "main": "server.js",
   "bin": {
