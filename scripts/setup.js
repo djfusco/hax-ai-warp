@@ -1,176 +1,136 @@
 #!/usr/bin/env node
 
-const { exec } = require('child_process');
-const fs = require('fs').promises;
+const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
-class SetupScript {
-  constructor() {
-    this.configDir = path.join(process.env.HOME, '.hax-ai-warp');
-    this.run();
-  }
+console.log('🔧 HAX AI Warp Setup\n');
 
-  async run() {
-    console.log('🚀 Setting up HAX AI Warp...\n');
-
+function checkDocker() {
+  try {
+    console.log('🐳 Checking Docker...');
+    const version = execSync('docker --version', { encoding: 'utf8' }).trim();
+    console.log('✅ Docker found:', version);
+    
+    // Check if Docker daemon is running
     try {
-      await this.checkPrerequisites();
-      await this.createDirectories();
-      await this.createConfig();
-      await this.checkDocker();
-      await this.setupDockerImage();
-      console.log('\n✅ Setup complete! Run "npm start" to launch the server.');
+      execSync('docker ps', { encoding: 'utf8', stdio: 'ignore' });
+      console.log('✅ Docker daemon is running');
     } catch (error) {
-      console.error('\n❌ Setup failed:', error.message);
-      process.exit(1);
-    }
-  }
-
-  async checkPrerequisites() {
-    console.log('📋 Checking prerequisites...');
-    
-    // Check Node.js version
-    const nodeVersion = process.version;
-    console.log(`   Node.js: ${nodeVersion}`);
-    
-    if (parseInt(nodeVersion.slice(1)) < 16) {
-      throw new Error('Node.js 16 or higher required');
-    }
-
-    // Check if running on macOS
-    if (process.platform !== 'darwin') {
-      console.log('   ⚠️  This setup is optimized for macOS. Some features may not work on other platforms.');
-    }
-
-    console.log('   ✅ Prerequisites OK');
-  }
-
-  async createDirectories() {
-    console.log('📁 Creating directories...');
-    
-    const dirs = [
-      this.configDir,
-      path.join(this.configDir, 'vms'),
-      path.join(this.configDir, 'logs'),
-      path.join(this.configDir, 'sessions')
-    ];
-
-    for (const dir of dirs) {
-      await fs.mkdir(dir, { recursive: true });
-      console.log(`   Created: ${dir}`);
-    }
-  }
-
-  async createConfig() {
-    console.log('⚙️  Creating configuration...');
-    
-    const envContent = `# HAX AI Warp Configuration
-PORT=3000
-JWT_SECRET=hax-ai-warp-${Math.random().toString(36).substring(7)}
-VM_PREFIX=hax-ai-warp
-DEFAULT_VM_MEMORY=4G
-DEFAULT_VM_CPUS=2
-DEFAULT_VM_DISK=20G
-SESSION_TIMEOUT=8h
-`;
-
-    const envPath = path.join(this.configDir, '.env');
-    await fs.writeFile(envPath, envContent);
-    console.log(`   Created: ${envPath}`);
-
-    // Create symlink in project directory
-    const projectEnvPath = path.join(__dirname, '..', '.env');
-    try {
-      await fs.unlink(projectEnvPath);
-    } catch (e) {
-      // File doesn't exist, that's fine
+      console.log('⚠️  Docker daemon not running. Please start Docker Desktop.');
+      return false;
     }
     
-    await fs.symlink(envPath, projectEnvPath);
-    console.log(`   Linked: ${projectEnvPath}`);
-  }
-
-  async checkDocker() {
-    console.log('� Checking Docker...');
-    
-    return new Promise((resolve, reject) => {
-      exec('docker --version', (error, stdout, stderr) => {
-        if (error) {
-          console.log('   ❌ Docker not found');
-          console.log('   💡 Install Docker Desktop from: https://www.docker.com/products/docker-desktop/');
-          console.log('   💡 Or install via Homebrew: brew install --cask docker');
-          reject(new Error('Docker is required but not installed'));
-        } else {
-          console.log(`   ✅ Docker found: ${stdout.trim()}`);
-          resolve();
-        }
-      });
-    });
-  }
-
-  async setupDockerImage() {
-    console.log('🛠️  Setting up cybersecurity lab image...');
-    
-    return new Promise((resolve, reject) => {
-      // Create Dockerfile for cybersecurity lab environment
-      const dockerfile = `FROM ubuntu:22.04
-
-# Install essential tools for cybersecurity education
-RUN apt-get update && apt-get install -y \\
-    openssh-server \\
-    sudo \\
-    curl \\
-    wget \\
-    vim \\
-    nano \\
-    net-tools \\
-    iputils-ping \\
-    nmap \\
-    netcat \\
-    tcpdump \\
-    wireshark-common \\
-    john \\
-    hashcat \\
-    hydra \\
-    sqlmap \\
-    nikto \\
-    dirb \\
-    gobuster \\
-    metasploit-framework \\
-    python3 \\
-    python3-pip \\
-    git \\
-    && rm -rf /var/lib/apt/lists/*
-
-# Create student user
-RUN useradd -m -s /bin/bash student && \\
-    echo 'student:password' | chpasswd && \\
-    usermod -aG sudo student
-
-# Set up SSH
-RUN mkdir /var/run/sshd && \\
-    echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config && \\
-    sed 's@session\\s*required\\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
-
-EXPOSE 22
-CMD ["/usr/sbin/sshd", "-D"]
-`;
-
-      require('fs').writeFileSync('/tmp/hax-ai-dockerfile', dockerfile);
-      
-      console.log('   Building cybersecurity lab image (this may take a few minutes)...');
-      exec('docker build -t hax-ai-cyber-lab /tmp -f /tmp/hax-ai-dockerfile', (error, stdout, stderr) => {
-        if (error) {
-          console.log('   ⚠️  Docker build failed, but you can build it later');
-          console.log('   💡 Run: docker build -t hax-ai-cyber-lab . -f /tmp/hax-ai-dockerfile');
-          resolve(); // Don't fail setup for this
-        } else {
-          console.log('   ✅ Cybersecurity lab image ready!');
-          resolve();
-        }
-      });
-    });
+    return true;
+  } catch (error) {
+    console.log('❌ Docker not found. Please install Docker Desktop from https://docker.com');
+    return false;
   }
 }
 
-new SetupScript();
+function createEnvIfNeeded() {
+  const envPath = path.join(process.cwd(), '.env');
+  
+  if (!fs.existsSync(envPath)) {
+    console.log('\n📝 Creating default .env configuration...');
+    
+    const envTemplate = `# HAX AI Warp Configuration
+# Generated: ${new Date().toISOString()}
+
+# Default student password for Docker containers
+STUDENT_PASSWORD=haxwarp123
+
+# AI Configuration - Add your API key below
+# OpenAI: Get from https://platform.openai.com/api-keys
+# OPENAI_API_KEY=your-openai-api-key-here
+
+# Anthropic Claude: Get from https://console.anthropic.com/account/keys
+# ANTHROPIC_API_KEY=your-anthropic-api-key-here
+
+# Server Configuration
+PORT=3000
+`;
+    
+    fs.writeFileSync(envPath, envTemplate);
+    console.log('✅ Created .env file with default configuration');
+    
+    return false; // Indicates user needs to configure
+  }
+  
+  console.log('✅ .env file already exists');
+  return true;
+}
+
+function pullDockerImage() {
+  console.log('\n🐳 Preparing Docker environment...');
+  console.log('This may take a few minutes on first run...');
+  
+  try {
+    // Check if we have Ubuntu image
+    try {
+      execSync('docker image inspect ubuntu:22.04', { stdio: 'ignore' });
+      console.log('✅ Ubuntu 22.04 image already available');
+    } catch (error) {
+      console.log('📥 Downloading Ubuntu 22.04 image...');
+      execSync('docker pull ubuntu:22.04', { stdio: 'inherit' });
+      console.log('✅ Ubuntu 22.04 image downloaded');
+    }
+    
+    return true;
+  } catch (error) {
+    console.log('❌ Failed to prepare Docker image:', error.message);
+    return false;
+  }
+}
+
+function showNextSteps() {
+  console.log('\n🎉 Setup complete!');
+  console.log('\n📋 Next steps:');
+  console.log('1. 🔑 Add your AI API key to the .env file:');
+  console.log('   • OpenAI: https://platform.openai.com/api-keys');
+  console.log('   • Anthropic: https://console.anthropic.com/account/keys');
+  console.log('');
+  console.log('2. 🚀 Start the server:');
+  console.log('   npm start');
+  console.log('   # or if installed globally:');
+  console.log('   npx hax-ai-warp');
+  console.log('');
+  console.log('3. 🌐 Open your browser to:');
+  console.log('   http://localhost:3000');
+  console.log('');
+  console.log('💡 The AI features require an API key to function fully.');
+  console.log('   Without one, the system will use basic pattern matching.');
+}
+
+// Main setup process
+async function main() {
+  let success = true;
+  
+  // Check Docker
+  if (!checkDocker()) {
+    success = false;
+  }
+  
+  // Create .env file
+  const envConfigured = createEnvIfNeeded();
+  
+  // Pull Docker image if Docker is available
+  if (success) {
+    if (!pullDockerImage()) {
+      success = false;
+    }
+  }
+  
+  if (success) {
+    showNextSteps();
+  } else {
+    console.log('\n⚠️  Setup completed with warnings.');
+    console.log('Please address the issues above before starting the server.');
+  }
+  
+  if (!envConfigured) {
+    console.log('\n🔧 Remember to configure your AI API key in the .env file!');
+  }
+}
+
+main().catch(console.error);

@@ -1,33 +1,288 @@
-# HAX AI Warp - Cybersecurity Lab Environment
+# HAX AI Warp 🚀
 
-Browser-accessible Linux sandbox containers with **AI-powered terminal assistance** for educational use. Provides isolated cybersecurity lab environments using Docker containers with pre-installed security tools and intelligent tutoring.
+> AI-powered cybersecurity education platform with Docker-based Linux terminals and intelligent tutoring
 
-## Features
+HAX AI Warp provides students and educators with an interactive, browser-based Linux terminal environment enhanced with AI-powered assistance. Perfect for cybersecurity courses, Linux training, and hands-on learning.
 
-- 🔐 **Cybersecurity Lab Environment**: Pre-configured Ubuntu containers with security tools
-- 🤖 **AI-Powered Terminal Assistant**: Warp.dev-like AI monitoring and suggestions
-- 🚀 **Instant Access**: Browser-based terminal interface with real-time connectivity
-- 👥 **Student Isolation**: Each student gets their own containerized environment
-- 🛠️ **Security Tools**: nmap, metasploit, wireshark, john, hydra, and more
-- 🎓 **Educational Focus**: Context-aware learning assistance and error guidance
-- 🐳 **Container Management**: Automatic container creation and lifecycle managementp - Cybersecurity Lab Environment
+## ✨ Features
 
-Browser-accessible Linux sandbox containers with terminal integration for educational use. Provides isolated cybersecurity lab environments using Docker containers with pre-installed security tools.
+- 🖥️ **Browser-based Linux terminals** - No local Linux setup required
+- 🤖 **AI-powered tutoring** - Intelligent suggestions and error help (OpenAI/Claude)
+- 🐳 **Docker-based isolation** - Safe, sandboxed learning environments
+- 🎓 **Educational focus** - Designed for cybersecurity and Linux courses
+- 🔒 **Secure by default** - Isolated containers with controlled access
+- 📱 **Multi-user support** - Multiple students can use simultaneously
+- ⚡ **Real-time assistance** - Get help as you type commands
 
-## Features
+## 🎯 Perfect For
 
-- 🔐 **Cybersecurity Lab Environment**: Pre-configured Ubuntu containers with security tools
-- 🚀 **Instant Access**: Browser-based terminal interface with real-time connectivity
-- 👥 **Student Isolation**: Each student gets their own containerized environment
-- 🛠️ **Security Tools**: nmap, metasploit, wireshark, john, hydra, and more
-- 🎓 **Educational Focus**: Designed for cybersecurity courses and training
-- � **Container Management**: Automatic container creation and lifecycle management
+- **Cybersecurity courses** - Practice with security tools in safe environments
+- **Linux training** - Learn command line skills with AI guidance
+- **Remote learning** - Consistent environment accessible from anywhere
+- **Computer labs** - Easy deployment for educational institutions
+- **Self-study** - Personal learning with intelligent assistance
 
-## Quick Start
+## 📋 Prerequisites
 
-### Prerequisites
+Before installing, ensure you have:
 
-1. **Docker Desktop**: [Download and install Docker](https://www.docker.com/products/docker-desktop/)
+### Required
+- **Node.js 18+** - [Download from nodejs.org](https://nodejs.org/)
+- **Docker Desktop** - [Download from docker.com](https://docker.com/products/docker-desktop)
+
+### Recommended
+- **AI API Key** (for full AI features):
+  - [OpenAI API Key](https://platform.openai.com/api-keys) OR
+  - [Anthropic Claude API Key](https://console.anthropic.com/account/keys)
+
+## 🚀 Quick Start
+
+### Option 1: NPX (Recommended)
+```bash
+# Install and run in one command
+npx hax-ai-warp
+
+# Or run setup first
+npx hax-ai-warp --setup
+```
+
+### Option 2: Manual Installation
+```bash
+# Clone the repository
+git clone https://github.com/djfusco/hax-ai-warp.git
+cd hax-ai-warp
+
+# Install dependencies
+npm install
+
+# Run setup
+npm run setup
+
+# Start the server
+npm start
+```
+
+## ⚙️ Configuration
+
+### 1. Environment Setup
+
+The system will create a `.env` file automatically. Edit it to configure:
+
+```bash
+# Student password for Docker containers
+STUDENT_PASSWORD=haxwarp123
+
+# AI Configuration (choose one)
+OPENAI_API_KEY=your-openai-api-key-here
+# OR
+ANTHROPIC_API_KEY=your-anthropic-api-key-here
+
+# Server Configuration
+PORT=3000
+```
+
+### 2. Get Your AI API Key
+
+**Option A: OpenAI (GPT)**
+1. Go to [OpenAI Platform](https://platform.openai.com/api-keys)
+2. Create an account and add billing information
+3. Generate a new API key
+4. Add it to your `.env` file as `OPENAI_API_KEY`
+
+**Option B: Anthropic Claude (Recommended)**
+1. Go to [Anthropic Console](https://console.anthropic.com/account/keys)
+2. Create an account and add billing information
+3. Generate a new API key
+4. Add it to your `.env` file as `ANTHROPIC_API_KEY`
+
+### 3. Start the Server
+
+```bash
+# Using NPX
+npx hax-ai-warp
+
+# Or if installed locally
+npm start
+
+# Custom port
+npx hax-ai-warp --port 8080
+```
+
+## 🌐 Usage
+
+1. **Open your browser** to `http://localhost:3000`
+2. **Enter student information** - Student ID and course name
+3. **Start your terminal session** - A Docker container will be created
+4. **Begin learning!** - The AI will provide suggestions as you work
+
+### Example Session
+
+```bash
+# In the web terminal:
+student@container:~$ ls
+README.txt
+
+student@container:~$ lss
+-bash: lss: command not found
+
+# AI suggests: "Did you mean 'ls'? This command lists directory contents."
+
+student@container:~$ nmap --help
+# AI explains: "nmap is a network scanning tool. Use 'nmap -sn 192.168.1.0/24' to scan for hosts."
+```
+
+## 🎓 Educational Use
+
+### For Instructors
+
+1. **Deploy once** - Students access via web browser
+2. **Consistent environment** - Everyone uses the same Linux setup
+3. **Safe experimentation** - Docker containers are isolated
+4. **Monitor progress** - See student activity in real-time
+5. **AI assistance** - Students get help without interrupting class
+
+### For Students
+
+1. **No setup required** - Just open a web browser
+2. **AI guidance** - Get help with commands and concepts
+3. **Safe learning** - Experiment without breaking anything
+4. **Accessible anywhere** - Learn from any device with a browser
+5. **Real Linux environment** - Practice with actual tools
+
+## 🔧 Command Line Options
+
+```bash
+npx hax-ai-warp [options]
+
+Options:
+  --port <port>     Server port (default: 3000)
+  --help, -h        Show help message
+  --version, -v     Show version
+  --setup           Run setup wizard
+
+Examples:
+  npx hax-ai-warp                 # Start on port 3000
+  npx hax-ai-warp --port 8080     # Start on port 8080
+  npx hax-ai-warp --setup         # Run setup wizard
+```
+
+## 🐳 Docker Requirements
+
+The system automatically manages Docker containers but requires:
+
+- **Docker Desktop** running
+- **Internet connection** for downloading Ubuntu images
+- **Sufficient disk space** (~500MB for base Ubuntu image)
+
+Each student session creates an isolated Ubuntu 22.04 container with:
+- Common cybersecurity tools
+- Development utilities
+- Network analysis tools
+- Text editors and compilers
+
+## 🔒 Security Features
+
+- **Isolated containers** - Each student gets their own environment
+- **No host access** - Containers cannot access the host system
+- **Automatic cleanup** - Containers are removed after sessions
+- **Configurable passwords** - Set secure access credentials
+- **API key security** - Keys stored locally, never transmitted
+
+## 🚨 Troubleshooting
+
+### Docker Issues
+```bash
+# Check Docker is running
+docker ps
+
+# If not running, start Docker Desktop
+# Then restart HAX AI Warp
+```
+
+### Port Already in Use
+```bash
+# Use a different port
+npx hax-ai-warp --port 8080
+```
+
+### AI Not Working
+1. Check your API key in `.env` file
+2. Verify you have billing set up with AI provider
+3. Check API key permissions
+4. Look for error messages in terminal
+
+### Performance Issues
+- Ensure Docker has enough memory allocated (4GB+ recommended)
+- Close unused containers: `docker container prune`
+- Monitor disk space: `docker system df`
+
+## 📈 Monitoring
+
+View real-time information:
+- **Active sessions**: Server shows connected students
+- **Container status**: Docker containers are managed automatically
+- **AI usage**: Monitor API calls and responses
+- **Resource usage**: Check Docker Desktop for container resources
+
+## 🛡️ Privacy & Data
+
+- **No data collection** - All processing happens locally
+- **API keys stay local** - Never transmitted to our servers
+- **Student privacy** - No personal data stored or transmitted
+- **Session isolation** - Student work is contained within their session
+
+## 📚 Examples
+
+### Cybersecurity Course Setup
+
+```bash
+# Start server for class
+npx hax-ai-warp --port 3000
+
+# Students access: http://your-server:3000
+# Each student creates their own isolated environment
+# AI helps with nmap, netcat, wireshark, etc.
+```
+
+### Linux Training
+
+```bash
+# Focus on command line skills
+# AI provides explanations for:
+# - File system navigation
+# - Permission management
+# - Process control
+# - Network configuration
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Issues**: [GitHub Issues](https://github.com/djfusco/hax-ai-warp/issues)
+- **Documentation**: [Full documentation](https://github.com/djfusco/hax-ai-warp/wiki)
+- **Community**: [Discussions](https://github.com/djfusco/hax-ai-warp/discussions)
+
+## 🎉 Acknowledgments
+
+Built with:
+- [xterm.js](https://xtermjs.org/) - Terminal emulation
+- [Socket.IO](https://socket.io/) - Real-time communication
+- [Docker](https://docker.com/) - Container management
+- [Express.js](https://expressjs.com/) - Web server
+- [OpenAI](https://openai.com/) / [Anthropic](https://anthropic.com/) - AI assistance
+
+---
+
+**Made with ❤️ for education**
+
+Transform your cybersecurity and Linux education with AI-powered assistance!
 2. **Node.js**: [Download Node.js](https://nodejs.org/) (version 18+ recommended)
 
 ### Installation
